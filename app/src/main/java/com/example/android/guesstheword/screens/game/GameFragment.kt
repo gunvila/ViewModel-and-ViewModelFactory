@@ -17,11 +17,13 @@
 package com.example.android.guesstheword.screens.game
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.example.android.guesstheword.R
 import com.example.android.guesstheword.databinding.GameFragmentBinding
 
@@ -41,6 +43,8 @@ class GameFragment : Fragment() {
 
     private lateinit var binding: GameFragmentBinding
 
+    private lateinit var viewModel: GameViewModel
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
@@ -51,9 +55,10 @@ class GameFragment : Fragment() {
                 container,
                 false
         )
-
-        resetList()
-        nextWord()
+        Log.i("GameFragment", "Called ViewModelProviders.of")
+        viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
+        //viewModel.resetList()
+        //viewModel.nextWord()
 
         binding.correctButton.setOnClickListener { onCorrect() }
         binding.skipButton.setOnClickListener { onSkip() }
@@ -66,7 +71,7 @@ class GameFragment : Fragment() {
     /**
      * Resets the list of words and randomizes the order
      */
-    private fun resetList() {
+    public fun resetList() {
         wordList = mutableListOf(
                 "queen",
                 "hospital",
@@ -95,14 +100,14 @@ class GameFragment : Fragment() {
 
     /** Methods for buttons presses **/
 
-    private fun onSkip() {
+    fun onSkip() {
         if (!wordList.isEmpty()) {
             score--
         }
         nextWord()
     }
 
-    private fun onCorrect() {
+    fun onCorrect() {
         if (!wordList.isEmpty()) {
             score++
         }
@@ -112,7 +117,7 @@ class GameFragment : Fragment() {
     /**
      * Moves to the next word in the list
      */
-    private fun nextWord() {
+    fun nextWord() {
         if (!wordList.isEmpty()) {
             //Select and remove a word from the list
             word = wordList.removeAt(0)
@@ -124,11 +129,11 @@ class GameFragment : Fragment() {
 
     /** Methods for updating the UI **/
 
-    private fun updateWordText() {
+    fun updateWordText() {
         binding.wordText.text = word
     }
 
-    private fun updateScoreText() {
+    fun updateScoreText() {
         binding.scoreText.text = score.toString()
     }
 }
