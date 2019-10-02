@@ -32,14 +32,7 @@ import com.example.android.guesstheword.databinding.GameFragmentBinding
  */
 class GameFragment : Fragment() {
 
-    // The current word
-    private var word = ""
 
-    // The current score
-    private var score = 0
-
-    // The list of words - the front of the list is the next word to guess
-    private lateinit var wordList: MutableList<String>
 
     private lateinit var binding: GameFragmentBinding
 
@@ -57,8 +50,8 @@ class GameFragment : Fragment() {
         )
         Log.i("GameFragment", "Called ViewModelProviders.of")
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
-        //viewModel.resetList()
-        //viewModel.nextWord()
+        viewModel.resetList()
+        viewModel.nextWord()
 
         binding.correctButton.setOnClickListener { onCorrect() }
         binding.skipButton.setOnClickListener { onSkip() }
@@ -68,72 +61,36 @@ class GameFragment : Fragment() {
 
     }
 
-    /**
-     * Resets the list of words and randomizes the order
-     */
-    public fun resetList() {
-        wordList = mutableListOf(
-                "queen",
-                "hospital",
-                "basketball",
-                "cat",
-                "change",
-                "snail",
-                "soup",
-                "calendar",
-                "sad",
-                "desk",
-                "guitar",
-                "home",
-                "railway",
-                "zebra",
-                "jelly",
-                "car",
-                "crow",
-                "trade",
-                "bag",
-                "roll",
-                "bubble"
-        )
-        wordList.shuffle()
-    }
-
-    /** Methods for buttons presses **/
-
-    fun onSkip() {
-        if (!wordList.isEmpty()) {
-            score--
-        }
-        nextWord()
-    }
-
-    fun onCorrect() {
-        if (!wordList.isEmpty()) {
-            score++
-        }
-        nextWord()
-    }
-
-    /**
-     * Moves to the next word in the list
-     */
-    fun nextWord() {
-        if (!wordList.isEmpty()) {
-            //Select and remove a word from the list
-            word = wordList.removeAt(0)
-        }
+    private fun onSkip() {
+        viewModel.onSkip()
         updateWordText()
         updateScoreText()
     }
 
+    private fun onCorrect() {
+        viewModel.onCorrect()
+        updateScoreText()
+        updateWordText()
+    }
+
+    /**
+     * Resets the list of words and randomizes the order
+     */
+
+
+    /** Methods for buttons presses **/
+
+
+
+
 
     /** Methods for updating the UI **/
 
-    fun updateWordText() {
-        binding.wordText.text = word
+    private fun updateWordText() {
+        binding.wordText.text = viewModel.word
     }
 
-    fun updateScoreText() {
-        binding.scoreText.text = score.toString()
+    private fun updateScoreText() {
+        binding.scoreText.text = viewModel.score.toString()
     }
 }
