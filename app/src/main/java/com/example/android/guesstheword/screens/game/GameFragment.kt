@@ -57,6 +57,7 @@ class GameFragment : Fragment() {
         viewModel.nextWord()
 
         binding.gameViewModel = viewModel
+        binding.lifecycleOwner = this
 
 
         viewModel.score.observe(this, Observer { newScore ->
